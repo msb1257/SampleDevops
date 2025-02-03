@@ -1,0 +1,43 @@
+##################Jenkins Installation on AWS EC2 ####################
+######################################
+<--Pre-Requites-->
+I)Ec2 instance
+II)Putty
+#####################################
+
+A)Update System Packages
+sudo apt update
+
+B)Install Java(java is dependent for jenkins installation)
+sudo apt install fontconfig openjdk-17-jre
+java -version
+
+Expected Output:
+openjdk version "17.0.x"
+
+C)Add Jenkins Repository & Install Jenkins
+sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+
+echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+D)Install Jenkins
+sudo apt-get update
+sudo apt-get install jenkins
+
+E)Start Jenkins
+sudo systemctl start jenkins 
+sudo systemctl enable jenkins
+sudo systemctl status jenkins
+
+F)Access Jenkins
+Open a GoogleChrome and navigate to:
+http://<public-ip-address>:8080
+Replace <public-ip-address> with the public IP address of your EC2 instance.
+
+G)Unlock Jenkins using the initial admin password:
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+Complete the setup by installing plugins and creating an admin user.
+
