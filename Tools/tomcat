@@ -1,0 +1,78 @@
+##############Tomcat Setup################
+###################################
+<--Pre-Requites-->
+I)Ec2 instance
+II)Putty
+###################################
+
+A)Update System Packages
+Ensure your system is up to date:
+sudo apt update
+
+B)Install Java
+sudo apt install fontconfig openjdk-17-jre
+java -version
+
+Expected Output:
+openjdk version "17.0.x"
+
+C)Download Tomcat
+Find the latest stable Tomcat version from Apache Tomcat’s official site and download it.
+sudo wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.15/bin/apache-tomcat-10.1.15.tar.gz
+
+D)Create a dedicated directory for tomcat
+sudo mkdir -p /opt/tomcat
+
+E)Now, extract the downloaded Tomcat Tar file into the created directory.
+sudo tar xzvf apache-tomcat-*tar.gz -C /opt/tomcat --strip-components=1
+
+F)Create a dedicated user
+sudo groupadd tomcat
+sudo useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
+
+G)Changing the owner of tomcat directory to tomcat(user):
+sudo chown -R tomcat: /opt/tomcat
+sudo chmod +x /opt/tomcat/bin/*.sh
+
+H)start tomcat
+sudo systemctl daemon-reload
+sudo systemctl enable tomcat
+sudo systemctl start tomcat/(/opt/tomcat/bin/startup.sh)
+sudo systemctl status tomcat 
+
+I)Change the username and password values with whatever you want to set for your Tomcat.
+sudo vi /opt/tomcat/conf/tomcat-users.xml
+<role rolename="admin"/>
+<role rolename="admin-gui"/>
+<role rolename="manager"/>
+<role rolename="manager-gui"/>
+<user username="mist" password="mist123" roles="admin,admin-gui,manager,manager-gui"/>
+Save the file and exit- Ctrl+X, type- Y, and hit the Enter key.
+
+
+J)Enable Tomcat and Host Manager Remote access
+By default, you won’t be able to access your installed Tomcat Manager sections (web interface) outside the local system. For that, we have to enable it by editing individually the context.xml file available for Tomcat Manager and Host Manager.
+For Tomcat Manager’s remote access:
+Edit the Context file  
+
+sudo vi  /opt/tomcat/webapps/manager/META-INF/context.xml
+In the file, scroll and go to the end and comment out the following block of text-
+<Valve className="org.apache.catalina.valves.RemoteAddrValve"
+allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" />
+Just add <!-- at the beginning and --> in the end, after that, this will look something like this-
+Save the file and exit- Ctrl+X, type- Y, and hit the Enter key.
+
+For Host manager remote access:
+sudo vi /opt/tomcat/webapps/host-manager/META-INF/context.xml
+<!-- <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" /> →
+Just like above, also add <!-- at the beginning and --> at the end of the text given below in the file, after that, this will look like something this-
+Save the file and exit.
+
+K)Stop and Start Tomcat
+sudo /opt/tomcat/bin/shutdown.sh
+sudo /opt/tomcat/bin/startup.sh
+
+L)Open GoogleChrome and hit below url.
+For example:
+http://server-ip-addres:8080
