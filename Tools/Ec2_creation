@@ -1,0 +1,43 @@
+##########Ec2 instance server creation################
+
+############################################
+<--Pre-Requites-->
+I)AWS Account.
+II)Putty(To verify connection)
+############################################
+
+
+A)Sign In to AWS Management Console
+Go to the AWS Management Console
+
+B)Navigate to EC2 service
+In the AWS Management Console, search for EC2 in the services search bar.
+Click on EC2 to open the EC2 Dashboard.
+
+C)Launch an Instance:
+On the EC2 Dashboard, click the "Launch Instance" button.
+Provide Name and Choose an Amazon Machine Image (AMI)
+
+D)Choose an Instance Type
+Select the instance type based on your needs (e.g., t2.micro for free tier eligibility).
+
+E)Create a Key Pair:
+Choose "Create a new key pair", give it a name, and download the .ppk file.
+Store the .ppk file securely. You’ll need it to connect to the instance.
+
+F)Configure Security Group:
+Create a new security group or use an existing one.
+
+G)Configure Storage:
+Specify the size of the root volume (default is usually 8 GB for Linux).
+
+H)Launch the Instance:
+Click "Launch Instance" to finalize the creation process.
+Wait a few minutes for the instance to initialize.
+
+I)Connect to Your Linux Server:
+Open Putty->Provide IP in HostName box->Connection 200->Expand SSH->Expand Auth->Select Credentials
+->Browse & select the downloaded key in (Above Step E)->Click open->enter user as ubuntu/ec2
+
+J)Task Completed
+
