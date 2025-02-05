@@ -1,0 +1,63 @@
+##############Nexus Setup################
+###################################
+<--Pre-Requites-->
+I)Ec2 instance & open ports 8001
+II)Putty
+###################################
+
+A)Update system packages and install java
+Sudo su -
+sudo apt update
+sudo apt install openjdk-17-jdk -y  
+java -version  
+
+B)Download and untar/unzip Nexus Repository
+cd /opt  
+sudo wget https://download.sonatype.com/nexus/3/latest-unix.tar.gz  
+sudo tar -xvzf latest-unix.tar.gz  
+sudo mv nexus-3.76.1-01/ /opt/nexus
+
+C)create a nexus user and add it to sudo users group
+sudo adduser nexus
+sudo visudo
+nexus ALL=(ALL) NOPASSWD: ALL (adding to sudo users)
+sudo chown -R nexus:nexus /opt/nexus (changing owner to nexus)
+sudo chown -R nexus:nexus /opt/sonatype-work (changing owner to nexus)
+
+D)To run nexus as service at boot time, open /opt/nexus/bin/nexus.rc file, uncomment it and add nexus user as shown below:
+sudo vi  /opt/nexus/bin/nexus.rc
+run_as_user="nexus"
+
+E)To Increase the Nexus JVM Heap Size, Modify the Size as Shown Below:
+sudo vi /opt/nexus/bin/nexus.vmoptions
+add below
+-XX:MaxDirectMemorySize=2703m
+-Djava.net.preferIPv4Stack=true
+
+F)Create a Systemd Service File:
+sudo nano /etc/systemd/system/nexus.service
+#######################################
+[Unit]
+Description=nexus service
+After=network.target
+
+[Service]
+Type=forking
+LimitNOFILE=65536
+ExecStart=/opt/nexus/bin/nexus start
+ExecStop=/opt/nexus/bin/nexus stop
+User=nexus
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+#######################################
+
+G)Start and Enable Nexus:
+sudo systemctl start nexus  (start command)
+sudo systemctl enable nexus (command to enable nexus service)
+sudo systemctl status nexus (command to check status of nexus)
+
+H)Access nexus at below link and login as admin.
+sudo nano /opt/sonatype-work/nexus3/admin.password  (command to get password)
+http://<server_IP>:8081
