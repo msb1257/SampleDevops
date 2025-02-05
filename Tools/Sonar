@@ -1,0 +1,107 @@
+##############Sonar Setup################
+###################################
+<--Pre-Requites-->
+I)Ec2 instance & open ports 9000,5432
+II)Putty
+###################################
+A)Update Packages
+sudo su -
+sudo apt-get update
+
+B)Install wget and unzip package and java:
+sudo apt-get install wget unzip -y
+sudo apt-get install openjdk-17-jdk -y
+
+C)Install and Setup PostgreSQL 10 Database for SonarQube
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
+
+D)Install the PostgreSQL database server by using the following command:
+sudo apt-get install postgresql postgresql-contrib -y
+
+E)Start PostgreSQL Database Server:
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+sudo systemctl status postgresql
+
+F)Change the password for the default PostgreSQL user and switch to postgres user
+sudo passwd postgres
+Enter new password
+Retype new password
+su - postgres
+Enter your password
+
+G)Create a new database user,database and grant required access
+->createuser sonar
+psql
+->ALTER USER sonar WITH ENCRYPTED password 'sonar';
+->CREATE DATABASE sonarqube OWNER sonar;
+->Grant all privileges to sonar user on SonarQube database:
+->GRANT ALL PRIVILEGES ON DATABASE sonarqube TO sonar;
+\q
+exit
+
+H)Download and unzip SonarQube installer files archive
+cd /tmp
+sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.9.0.65466.zip
+sudo unzip sonarqube-9.9.0.65466.zip -d /opt
+sudo mv /opt/sonarqube-9.9.0.65466 /opt/sonarqube
+
+I)Configure SonarQube
+sudo groupadd sonar  (creating group sonar)
+sudo useradd -c "User to run SonarQube" -d /opt/sonarqube -g sonar sonar (giving access to sonar user)
+sudo chown sonar:sonar /opt/sonarqube -R (making sonar as owner)
+
+J)Open the SonarQube configuration file, Uncomment the PostgreSQL database details:
+sudo nano /opt/sonarqube/conf/sonar.properties
+sonar.jdbc.username=<your-postgres-username> (provide sonar as username)
+sonar.jdbc.password=<your-postgres-password> (provide sonar as password)
+sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonarqube
+
+K)Edit SonarQube Startup Script and add the RUN_AS_USER variable:
+sudo vi /opt/sonarqube/bin/linux-x86-64/sonar.sh
+RUN_AS_USER=sonar
+Save and exit.
+
+L)Start SonarQube
+sudo su sonar
+cd /opt/sonarqube/bin/linux-x86-64/
+./sonar.sh start
+./sonar.sh status
+./sonar.sh stop
+exit
+
+M)Create a systemd Service File
+cd /opt/sonarqube/bin/linux-x86-64/
+sudo vi /etc/systemd/system/sonar.service
+Add the following configuration:
+
+#########################################
+[Unit]
+Description=SonarQube service
+After=syslog.target network.target
+
+[Service]
+Type=forking
+ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
+ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+User=sonar
+Group=sonar
+Restart=always
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
+#########################################
+Save and exit (CTRL+X, then Y, and Enter).
+
+N)Reload Systemd and Enable SonarQube Service
+sudo systemctl daemon-reload
+sudo systemctl enable sonar.service
+
+O)Start SonarQube Service
+sudo systemctl start sonar.service
+sudo systemctl status sonar.service
+
+P)Access Sonar at below link and login as admin/admin.
+http://public_IP:9000 
