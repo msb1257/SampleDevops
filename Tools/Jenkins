@@ -1,7 +1,7 @@
 ##################Jenkins Installation on AWS EC2 ####################
 ######################################
 <--Pre-Requites-->
-I)Ec2 instance
+I)Create Ec2 instance and open 8080 port
 II)Putty
 #####################################
 
