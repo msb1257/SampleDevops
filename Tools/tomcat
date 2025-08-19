@@ -11,6 +11,8 @@ sudo apt update
 
 B)Install Java
 sudo apt install fontconfig openjdk-17-jre
+sudo dnf install java-17-amazon-corretto -y
+
 java -version
 
 Expected Output:
