@@ -20,16 +20,15 @@ openjdk version "17.0.x"
 
 C)Download Tomcat
 Find the latest stable Tomcat version from Apache Tomcat’s official site and download it.
-sudo wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.15/bin/apache-tomcat-10.1.15.tar.gz
-https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.44/bin/apache-tomcat-10.1.44-deployer.tar.gz
+sudo wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.44/bin/apache-tomcat-10.1.44.tar.gz
 sudo useradd -d /home/tomcat tomcat
 sudo useradd -m -s /bin/bash tomcat
  sudo vi /etc/sudoers
 %tomcat ALL=(ALL)       NOPASSWD: ALL
 sudo passwd tomcat
-wget "https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.44/bin/apache-tomcat-10.1.44-deployer.tar.gz"
-chmod 775 apache-tomcat-10.1.44-deployer.tar.gz
-tar xvzf apache-tomcat-10.1.44-deployer.tar.gz
+wget "https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.44/bin/apache-tomcat-10.1.44.tar.gz"
+chmod 775 apache-tomcat-10.*.tar.gz
+tar xvzf apache-tomcat-10.*.tar.gz
 sudo groupadd tomcat
 
 
