@@ -23,7 +23,7 @@ Find the latest stable Tomcat version from Apache Tomcat’s official site and d
 sudo wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.15/bin/apache-tomcat-10.1.15.tar.gz
 https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.44/bin/apache-tomcat-10.1.44-deployer.tar.gz
 sudo useradd -d /home/tomcat tomcat
-sudo useradd -d /home/tomcat tomcat
+sudo useradd -m -s /bin/bash tomcat
  sudo vi /etc/sudoers
 %tomcat ALL=(ALL)       NOPASSWD: ALL
 sudo passwd tomcat
